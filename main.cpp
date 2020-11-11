@@ -51,6 +51,10 @@ void setup () {
 	glEnable(GL_BLEND);
 }
 
+void createPlanet (int radius, int stacks, int columns) {
+  
+}
+
 void createSphere (int radius, int stacks, int columns) {
   // cria uma quádrica
   GLUquadric* quadObj = gluNewQuadric();

@@ -1,7 +1,7 @@
 all:
 	g++ main.cpp -lGLEW -lglut -lGL -lSOIL -lGLU
 
-install-librries:
+install-libraries:
 	sudo apt-get update
 	sudo apt-get install build-essential -y
 	sudo apt-get install freeglut3-dev -y
