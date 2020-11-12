@@ -19,8 +19,7 @@ void resize (int w, int h) {
   glViewport (0, 0, w, h);
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
-	// glOrtho(0, 500, 0, 500, -500, 500);
-  gluPerspective(45, (float)w/(float)h, 1, 1000);
+  gluPerspective(45, (float)w/(float)h, 0.1, 1000);
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
 }
@@ -41,7 +40,7 @@ int carregaTextura(const char *textureName) {
 
 void posicionaCamera(int x, int y) {
     xMouse = x;
-    yMouse = y;;
+    yMouse = y;
     glutPostRedisplay();
 }
 
@@ -136,6 +135,9 @@ void specialKeyInput (int key, int x, int y) {
 void rodinha(int button, int dir, int x, int y) {
   if (button == 3) {
     posZ -= 0.1;
+    if (posZ <= 0) {
+      posZ = 0.000000001;
+    }
   }
 
   else if (button == 4) {
