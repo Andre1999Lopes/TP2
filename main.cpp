@@ -8,9 +8,11 @@
 static float largura, altura;
 static float xMouse = 250, yMouse = 250;
 static float rotation = 0;
-static float posX, posY, posZ = 5;
+static float eyeX, eyeY, eyeZ = 150, centerX = 0, centerY = 0;
 int marsTexture;
 int sunTexture;
+int mercuryTexture;
+int venusTexture;
 
 void resize (int w, int h) {
   largura = w;
@@ -51,7 +53,9 @@ void setup () {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
   marsTexture = carregaTextura("mars-small.jpg");
-  sunTexture = carregaTextura ("solzin.jpg");
+  sunTexture = carregaTextura("solzin.jpg");
+  mercuryTexture = carregaTextura("mercurio.png");
+  venusTexture = carregaTextura("2k_venus_surface.jpg");
   glEnable(GL_CULL_FACE);
   glCullFace(GL_BACK);
   glEnable(GL_DEPTH_TEST);
@@ -77,29 +81,35 @@ void createSphere (int radius, int stacks, int columns) {
 }
 
 void createPlanet(float radius, int textura) {
-  glBindTexture(GL_TEXTURE_2D, textura);
-  glRotatef(rotation, 0, 1, 0);
-  glRotatef(90, 1, 0, 0);
-  createSphere(radius, 200, 200);
+  glPushMatrix();
+    glBindTexture(GL_TEXTURE_2D, textura);
+    glRotatef(rotation, 0, 1, 0);
+    createSphere(radius, 200, 200);
+  glPopMatrix();
 }
 
 void draw () {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glLoadIdentity();
-  gluLookAt(posX, posY, posZ,
-            posX, posY, 0,
+  gluLookAt(eyeX, eyeY, eyeZ,
+            centerX, centerY, 0,
             0, 1, 0);
 
 	glColor3f(1, 1, 1);
   glEnable(GL_TEXTURE_2D);
-  glPushMatrix();
+
     glTranslatef(0, 0, -10);
-    createPlanet(1.5, sunTexture);
+    createPlanet(5, sunTexture);
 
-    glTranslatef(0, -10, 2);
-    createPlanet(1.5, marsTexture);
+    glTranslatef(0, -2, 50);
+    createPlanet(1.5, mercuryTexture);
 
-  glPopMatrix();
+    glTranslatef(0, 5, 50);
+    createPlanet(1, venusTexture);
+
+    // glTranslatef(0, -30, 0);
+    // createPlanet(1.5, marsTexture);
+
   glDisable(GL_TEXTURE_2D);
   glutSwapBuffers();
 }
@@ -109,44 +119,65 @@ void keyInput (unsigned char key, int x, int y) {
     case 27:
 			exit(0);
 			break;
-	}
+
+    // em teoria, era pra virar a camera ao redor do undo
+
+    // case 'd':
+    // case 'D':
+    //   centerX += 0.1;
+    //   break;
+
+    // case 'a':
+    // case 'A':
+    //   centerX -= 0.1;
+    //   break;
+  }
 }
 
 void specialKeyInput (int key, int x, int y) {
   switch (key) {
     case GLUT_KEY_UP:
-      posY += 0.1;
+      eyeY += 0.1;
+      centerY += 0.1;
       break;
 
     case GLUT_KEY_DOWN:
-      posY -= 0.1;
+      eyeY -= 0.1;
+      centerY -= 0.1;
       break;
     
     case GLUT_KEY_LEFT:
-      posX -= 0.1;
+      eyeX -= 0.1;
+      centerX -= 0.1;
       break;
 
     case GLUT_KEY_RIGHT:
-      posX += 0.1;
+      eyeX += 0.1;
+      centerX += 0.1;
       break;
   }
 }
 
 void rodinha(int button, int dir, int x, int y) {
   if (button == 3) {
-    posZ -= 0.1;
-    if (posZ <= 0) {
-      posZ = 0.000000001;
+    eyeZ -= 1;
+    if (eyeZ <= 0) {
+      eyeZ = 0.000000001;
     }
   }
 
   else if (button == 4) {
-    posZ += 0.1;
+    eyeZ += 1;
   }
 }
 
 void rotacionaEsfera() {
   rotation += .1f;
+  // std::cout << "centerX: " << centerX << std::endl;
+  // std::cout << "centerY: " << centerY << std::endl;
+  // std::cout << "eyeX: " << eyeX << std::endl;
+  // std::cout << "eyeY: " << eyeX << std::endl;
+  // std::cout << "eyeZ: " << eyeZ << std::endl;
   glutPostRedisplay();
 }
 
