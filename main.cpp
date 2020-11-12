@@ -7,6 +7,7 @@
 
 static float largura, altura;
 static float xMouse = 250, yMouse = 250;
+static float rotation = 0;
 int marsTexture;
 
 void resize (int w, int h) {
@@ -22,6 +23,20 @@ void resize (int w, int h) {
   glLoadIdentity();
 }
 
+int carregaTextura(const char *textureName) {
+  int loadedTexture = SOIL_load_OGL_texture(
+		textureName,
+		SOIL_LOAD_AUTO,
+		SOIL_CREATE_NEW_ID,
+		SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
+	);
+  if(loadedTexture == 0){
+    std::cout << "Problema ao carregar textura: " << SOIL_last_result() << std::endl;
+  }
+
+  return loadedTexture;
+}
+
 void posicionaCamera(int x, int y) {
     xMouse = x;
     yMouse = y;;
@@ -34,17 +49,7 @@ void setup () {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-  marsTexture = SOIL_load_OGL_texture
-	(
-		"./mars-small.jpg",
-		SOIL_LOAD_AUTO,
-		SOIL_CREATE_NEW_ID,
-		SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
-	);
-  if(marsTexture == 0)
-    {
-      std::cout << "Problema ao carregar textura: " << SOIL_last_result() << std::endl;
-    }
+  marsTexture = carregaTextura("mars-small.jpg");
   glEnable(GL_CULL_FACE);
   glCullFace(GL_BACK);
   glEnable(GL_DEPTH_TEST);
@@ -73,6 +78,12 @@ void createSphere (int radius, int stacks, int columns) {
   gluDeleteQuadric(quadObj);
 }
 
+void createPlanet(float radius) {
+  glRotatef(0, 0, 1, 0);
+  glRotatef(90, 1, 0, 0);
+  createSphere(radius, 200, 200);
+}
+
 void draw () {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glLoadIdentity();
@@ -84,9 +95,7 @@ void draw () {
   glEnable(GL_TEXTURE_2D);
   glBindTexture(GL_TEXTURE_2D, marsTexture);
   glPushMatrix();
-    glRotatef(0, 0, 1, 0);
-    glRotatef(90, 1, 0, 0);
-    createSphere(1.5, 200, 200);
+    createPlanet(1.5);
   glPopMatrix();
   glDisable(GL_TEXTURE_2D);
   glutSwapBuffers();
@@ -98,6 +107,10 @@ void keyInput (unsigned char key, int x, int y) {
 			exit(0);
 			break;
 	}
+}
+
+void rotacionaEsfera(){
+
 }
 
 int main (int argc, char *argv[]) {
@@ -112,6 +125,6 @@ int main (int argc, char *argv[]) {
   glutKeyboardFunc(keyInput);
   glutPassiveMotionFunc(posicionaCamera);
   // glutSpecialFunc(specialKeyInput);
-  // glutIdleFunc(rotacionaEsfera);
+  glutIdleFunc(rotacionaEsfera);
   glutMainLoop();
 }
