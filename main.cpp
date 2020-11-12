@@ -8,6 +8,7 @@
 static float largura, altura;
 static float xMouse = 250, yMouse = 250;
 static float rotation = 0;
+static float posX, posY, posZ = 5;
 int marsTexture;
 int sunTexture;
 
@@ -19,7 +20,7 @@ void resize (int w, int h) {
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
 	// glOrtho(0, 500, 0, 500, -500, 500);
-  gluPerspective(1, (float)w/(float)h, 1, 1000);
+  gluPerspective(45, (float)w/(float)h, 1, 1000);
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
 }
@@ -45,7 +46,7 @@ void posicionaCamera(int x, int y) {
 }
 
 void setup () {
-  glClearColor(1, 1, 1, 1);
+  glClearColor(0, 0, 0, 1);
 
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -56,10 +57,6 @@ void setup () {
   glCullFace(GL_BACK);
   glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
-}
-
-void createPlanet (int radius, int stacks, int columns) {
-  
 }
 
 void createSphere (int radius, int stacks, int columns) {
@@ -90,14 +87,17 @@ void createPlanet(float radius, int textura) {
 void draw () {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glLoadIdentity();
-  gluLookAt(0, 0, 5,
-            0, 0, 0,
+  gluLookAt(posX, posY, posZ,
+            posX, posY, 0,
             0, 1, 0);
 
 	glColor3f(1, 1, 1);
   glEnable(GL_TEXTURE_2D);
   glPushMatrix();
-    glTranslatef(0, 0, -400);
+    glTranslatef(0, 0, -10);
+    createPlanet(1.5, sunTexture);
+
+    glTranslatef(0, -10, 2);
     createPlanet(1.5, marsTexture);
 
   glPopMatrix();
@@ -113,7 +113,37 @@ void keyInput (unsigned char key, int x, int y) {
 	}
 }
 
-void rotacionaEsfera(){
+void specialKeyInput (int key, int x, int y) {
+  switch (key) {
+    case GLUT_KEY_UP:
+      posY += 0.1;
+      break;
+
+    case GLUT_KEY_DOWN:
+      posY -= 0.1;
+      break;
+    
+    case GLUT_KEY_LEFT:
+      posX -= 0.1;
+      break;
+
+    case GLUT_KEY_RIGHT:
+      posX += 0.1;
+      break;
+  }
+}
+
+void rodinha(int button, int dir, int x, int y) {
+  if (button == 3) {
+    posZ -= 0.1;
+  }
+
+  else if (button == 4) {
+    posZ += 0.1;
+  }
+}
+
+void rotacionaEsfera() {
   rotation += .1f;
   glutPostRedisplay();
 }
@@ -129,7 +159,8 @@ int main (int argc, char *argv[]) {
   glutReshapeFunc(resize);
   glutKeyboardFunc(keyInput);
   glutPassiveMotionFunc(posicionaCamera);
-  // glutSpecialFunc(specialKeyInput);
+  glutSpecialFunc(specialKeyInput);
+  glutMouseFunc(rodinha);
   glutIdleFunc(rotacionaEsfera);
   glutMainLoop();
 }
