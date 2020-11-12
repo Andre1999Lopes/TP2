@@ -9,6 +9,7 @@ static float largura, altura;
 static float xMouse = 250, yMouse = 250;
 static float rotation = 0;
 int marsTexture;
+int sunTexture;
 
 void resize (int w, int h) {
   largura = w;
@@ -18,7 +19,7 @@ void resize (int w, int h) {
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
 	// glOrtho(0, 500, 0, 500, -500, 500);
-  gluPerspective(60, (float)w/(float)h, 1.0, 20.0);
+  gluPerspective(1, (float)w/(float)h, 1, 1000);
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
 }
@@ -50,6 +51,7 @@ void setup () {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
   marsTexture = carregaTextura("mars-small.jpg");
+  sunTexture = carregaTextura ("solzin.jpg");
   glEnable(GL_CULL_FACE);
   glCullFace(GL_BACK);
   glEnable(GL_DEPTH_TEST);
@@ -78,7 +80,8 @@ void createSphere (int radius, int stacks, int columns) {
   gluDeleteQuadric(quadObj);
 }
 
-void createPlanet(float radius) {
+void createPlanet(float radius, int textura) {
+  glBindTexture(GL_TEXTURE_2D, textura);
   glRotatef(rotation, 0, 1, 0);
   glRotatef(90, 1, 0, 0);
   createSphere(radius, 200, 200);
@@ -87,15 +90,16 @@ void createPlanet(float radius) {
 void draw () {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glLoadIdentity();
-  gluLookAt(1, 1, 5,
+  gluLookAt(0, 0, 5,
             0, 0, 0,
             0, 1, 0);
 
 	glColor3f(1, 1, 1);
   glEnable(GL_TEXTURE_2D);
-  glBindTexture(GL_TEXTURE_2D, marsTexture);
   glPushMatrix();
-    createPlanet(1.5);
+    glTranslatef(0, 0, -400);
+    createPlanet(1.5, marsTexture);
+
   glPopMatrix();
   glDisable(GL_TEXTURE_2D);
   glutSwapBuffers();
