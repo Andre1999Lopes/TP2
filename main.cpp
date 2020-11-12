@@ -79,7 +79,7 @@ void createSphere (int radius, int stacks, int columns) {
 }
 
 void createPlanet(float radius) {
-  glRotatef(0, 0, 1, 0);
+  glRotatef(rotation, 0, 1, 0);
   glRotatef(90, 1, 0, 0);
   createSphere(radius, 200, 200);
 }
@@ -87,9 +87,9 @@ void createPlanet(float radius) {
 void draw () {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glLoadIdentity();
-  gluLookAt(1*(xMouse-largura/2)/(largura/16), -1*(yMouse-altura/2)/(altura/16) + 3, 5,
-              0, 0, 0,
-              0, 1, 0);
+  gluLookAt(1, 1, 5,
+            0, 0, 0,
+            0, 1, 0);
 
 	glColor3f(1, 1, 1);
   glEnable(GL_TEXTURE_2D);
@@ -110,7 +110,8 @@ void keyInput (unsigned char key, int x, int y) {
 }
 
 void rotacionaEsfera(){
-
+  rotation += .1f;
+  glutPostRedisplay();
 }
 
 int main (int argc, char *argv[]) {
