@@ -9,13 +9,20 @@
 static float largura, altura;
 static float xMouse = 250, yMouse = 250;
 static float rotation = 0;
-static float eyeX, eyeY, eyeZ = 150, centerX = 0, centerY = 0;
-int marsTexture;
+static double eyeX, eyeY, eyeZ = 300, centerX = 0, centerY = 0;
 int sunTexture;
 int mercuryTexture;
 int venusTexture;
+int earthTexture;
+int marsTexture;
+int jupiterTexture;
+int saturnTexture;
+int uranusTexture;
+int neptuneTexture;
+
 const double pi = 3.14159265;
-static double anguloMercurio = 0, anguloVenus = 0;
+static double anguloMercurio = 0, anguloVenus = 0, anguloTerra = 0, anguloMarte = 0, anguloJupiter = 0;
+static double anguloSaturno = 0, anguloUrano = 0, anguloNetuno = 0;
 
 void resize (int w, int h) {
   largura = w;
@@ -24,12 +31,12 @@ void resize (int w, int h) {
   glViewport (0, 0, w, h);
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
-  gluPerspective(45, (float)w/(float)h, 0.1, 1000);
+  gluPerspective(45, (float)w/(float)h, 0.1, 99999999999);
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
 }
 
-int carregaTextura(const char *textureName) {
+int carregaTextura (const char *textureName) {
   int loadedTexture = SOIL_load_OGL_texture(
 		textureName,
 		SOIL_LOAD_AUTO,
@@ -43,7 +50,7 @@ int carregaTextura(const char *textureName) {
   return loadedTexture;
 }
 
-void posicionaCamera(int x, int y) {
+void posicionaCamera (int x, int y) {
     xMouse = x;
     yMouse = y;
     glutPostRedisplay();
@@ -55,10 +62,16 @@ void setup () {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-  marsTexture = carregaTextura("imgs/mars-small.jpg");
   sunTexture = carregaTextura("imgs/solzin.jpg");
   mercuryTexture = carregaTextura("imgs/mercurio.png");
   venusTexture = carregaTextura("imgs/2k_venus_surface.jpg");
+  earthTexture = carregaTextura("imgs/earth.png");
+  marsTexture = carregaTextura("imgs/2k_mars.jpg");
+  jupiterTexture = carregaTextura("imgs/2k_jupiter.jpg");
+  saturnTexture = carregaTextura("imgs/2k_saturn.jpg");
+  uranusTexture = carregaTextura("imgs/2k_uranus.jpg");
+  neptuneTexture = carregaTextura("imgs/2k_neptune.jpg");
+
   glEnable(GL_CULL_FACE);
   glCullFace(GL_BACK);
   glEnable(GL_DEPTH_TEST);
@@ -87,7 +100,7 @@ void createSphere (int radius, int stacks, int columns) {
   gluDeleteQuadric(quadObj);
 }
 
-void createSun(float radius, float textura) {
+void createSun (float radius, float textura) {
   glPushMatrix();
     glBindTexture(GL_TEXTURE_2D, textura);
     glRotatef(rotation, 0, 1, 0);
@@ -95,11 +108,14 @@ void createSun(float radius, float textura) {
   glPopMatrix();
 }
 
-void createPlanet(float radius, int textura) {
+void createPlanet (float radius, int textura, double angulo, float distanceFromSun) {
   glPushMatrix();
-    // glTranslated(radius*cos(angulo),0,radius*sin(angulo));
+    distanceFromSun *= 150;
     glBindTexture(GL_TEXTURE_2D, textura);
     glRotatef(rotation, 0, 1, 0);
+    glRotatef(-90, 1, 0, 0);
+    // glTranslatef(distanceFromSun*cos(angulo), 0, distanceFromSun*sin(angulo));
+    glTranslatef(0, 0, -distanceFromSun);
     createSphere(radius, 200, 200);
   glPopMatrix();
 
@@ -116,17 +132,16 @@ void draw () {
 	glColor3f(1, 1, 1);
   glEnable(GL_TEXTURE_2D);
 
-    createSun(5, sunTexture);
+    createSun(109, sunTexture);
 
-    glTranslatef(50*cos(anguloMercurio), -2, 50*sin(anguloMercurio));
-    // glTranslated(50*cos(angulo),0,50*sin(angulo));
-    createPlanet(1.5, mercuryTexture);
-
-    // glTranslatef(100+cos(anguloVenus), 5, 100+sin(anguloVenus));
-    // createPlanet(1, venusTexture);
-
-    // glTranslatef(0, -30, 0);
-    // createPlanet(1.5, marsTexture);
+    createPlanet(0.376, mercuryTexture, anguloMercurio, 38);
+    createPlanet(0.949, venusTexture, anguloVenus, 72);
+    createPlanet(1, earthTexture, anguloTerra, 100);
+    createPlanet(0.563, marsTexture, anguloMarte, 152);
+    createPlanet(11.2, jupiterTexture, anguloMarte, 520);
+    createPlanet(9.46, saturnTexture, anguloMarte, 958);
+    createPlanet(4.06, uranusTexture, anguloMarte, 1914);
+    createPlanet(3.88, neptuneTexture, anguloMarte, 3020);
 
   glDisable(GL_TEXTURE_2D);
   glutSwapBuffers();
@@ -155,44 +170,46 @@ void keyInput (unsigned char key, int x, int y) {
 void specialKeyInput (int key, int x, int y) {
   switch (key) {
     case GLUT_KEY_UP:
-      eyeY += 1;
-      centerY += 0.1;
+      eyeY += 100;
+      centerY += 100;
       break;
 
     case GLUT_KEY_DOWN:
-      eyeY -= 1;
-      centerY -= 0.1;
+      eyeY -= 100;
+      centerY -= 100;
       break;
     
     case GLUT_KEY_LEFT:
-      eyeX -= 1;
-      centerX -= 1;
+      eyeX -= 100;
+      centerX -= 100;
       break;
 
     case GLUT_KEY_RIGHT:
-      eyeX += 0.1;
-      centerX += 0.1;
+      eyeX += 100;
+      centerX += 100;
       break;
   }
 }
 
-void rodinha(int button, int dir, int x, int y) {
+void rodinha (int button, int dir, int x, int y) {
   if (button == 3) {
-    eyeZ -= 1;
+    eyeZ -= 500;
     if (eyeZ <= 0) {
       eyeZ = 0.000000001;
     }
   }
 
   else if (button == 4) {
-    eyeZ += 1;
+    eyeZ += 500;
   }
 }
 
-void rotacionaEsfera() {
-  rotation += .1f;
-  anguloMercurio += 0.01;
-  anguloVenus += 0.001;
+void rotacionaEsfera () {
+  // rotation += .5f;
+  // anguloMercurio += 0.03;
+  // anguloVenus += 0.05;
+  // anguloMarte += 0.1;
+  // anguloTerra += 0.01;
   // std::cout << "centerX: " << centerX << std::endl;
   // std::cout << "centerY: " << centerY << std::endl;
   // std::cout << "eyeX: " << eyeX << std::endl;
