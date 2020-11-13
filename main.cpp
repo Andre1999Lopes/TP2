@@ -10,6 +10,7 @@ static float largura, altura;
 static float xMouse = 250, yMouse = 250;
 static float rotation = 0;
 static float eyeX, eyeY, eyeZ = 150, centerX = 0, centerY = 0;
+const float translationSpeed = 30;
 int sunTexture;
 int mercuryTexture;
 int venusTexture;
@@ -31,7 +32,7 @@ void resize (int w, int h) {
   glViewport (0, 0, w, h);
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
-  gluPerspective(45, (float)w/(float)h, 0.1, 1000);
+  gluPerspective(45, (float)w/(float)h, 0.1, 2147483647);
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
 }
@@ -137,10 +138,10 @@ void draw () {
     createPlanet(1, venusTexture, anguloVenus, 150);
     createPlanet(4, earthTexture, anguloTerra, 200);
     createPlanet(1.5, marsTexture, anguloMarte, 250);
-    createPlanet(10, jupiterTexture, anguloMarte, 350);
-    createPlanet(8, saturnTexture, anguloMarte, 450);
-    createPlanet(5, uranusTexture, anguloMarte, 600);
-    createPlanet(5.5, neptuneTexture, anguloMarte, 750);
+    createPlanet(10, jupiterTexture, anguloJupiter, 350);
+    createPlanet(8, saturnTexture, anguloSaturno, 450);
+    createPlanet(5, uranusTexture, anguloUrano, 600);
+    createPlanet(5.5, neptuneTexture, anguloNetuno, 750);
 
   glDisable(GL_TEXTURE_2D);
   glutSwapBuffers();
@@ -205,15 +206,15 @@ void rodinha (int button, int dir, int x, int y) {
 
 void rotacionaEsfera () {
   rotation += .5f;
-  // anguloMercurio += 0.03;
-  // anguloVenus += 0.05;
-  // anguloMarte += 0.1;
-  // anguloTerra += 0.01;
-  // std::cout << "centerX: " << centerX << std::endl;
-  // std::cout << "centerY: " << centerY << std::endl;
-  // std::cout << "eyeX: " << eyeX << std::endl;
-  // std::cout << "eyeY: " << eyeX << std::endl;
-  // std::cout << "eyeZ: " << eyeZ << std::endl;
+  anguloMercurio += 4.419/translationSpeed;
+  anguloVenus += 1.624/translationSpeed;
+  anguloTerra += 1/translationSpeed;
+  anguloMarte += 0.532/translationSpeed;
+  anguloJupiter += 0.084/translationSpeed;
+  anguloSaturno += 0.034/translationSpeed;
+  anguloUrano += 0.012/translationSpeed;
+  anguloNetuno += 0.06/translationSpeed;
+
   glutPostRedisplay();
 }
 
