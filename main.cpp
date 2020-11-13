@@ -10,7 +10,7 @@ static float largura, altura;
 static float xMouse = 250, yMouse = 250;
 static float rotation = 0;
 static float eyeX, eyeY, eyeZ = 150, centerX = 0, centerY = 0;
-const float translationSpeed = 100;
+const float translationSpeed = 10;
 int sunTexture;
 int mercuryTexture;
 int venusTexture;
@@ -20,6 +20,7 @@ int jupiterTexture;
 int saturnTexture;
 int uranusTexture;
 int neptuneTexture;
+int saturnRingsTexture;
 static bool biggerPlanets = false;
 
 const double pi = 3.14159265;
@@ -73,9 +74,10 @@ void setup () {
   saturnTexture = carregaTextura("imgs/2k_saturn.jpg");
   uranusTexture = carregaTextura("imgs/2k_uranus.jpg");
   neptuneTexture = carregaTextura("imgs/2k_neptune.jpg");
+  saturnRingsTexture = carregaTextura("imgs/2k_saturn_ring.png");
 
-  glEnable(GL_CULL_FACE);
-  glCullFace(GL_BACK);
+  // glEnable(GL_CULL_FACE);
+  // glCullFace(GL_BACK);
   glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 }
@@ -128,6 +130,24 @@ void createPlanet (float radius, int textura, double angulo, float distanceFromS
   // 360.0*diaAtual / 365.0
 }
 
+void createSaturnRings (int distanceFromSun, double angulo) {
+  glPushMatrix();
+    distanceFromSun *= 10;
+    glBindTexture(GL_TEXTURE_2D, saturnRingsTexture);
+    glTranslatef(distanceFromSun*cos(-angulo), 0, distanceFromSun*sin(-angulo));
+    glRotatef(rotation*10, 0, 1, 0);
+    // glRotatef(-90, 1, 0, 0);
+    GLUquadric *disk;
+    disk = gluNewQuadric();
+    gluQuadricTexture(disk, GL_TRUE);
+    if(biggerPlanets)
+      gluDisk(disk, 20*12, 20*20, 600, 600);
+    else
+      gluDisk(disk, 12, 20, 600, 600);
+  glPopMatrix();
+
+}
+
 void draw () {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glLoadIdentity();
@@ -135,7 +155,7 @@ void draw () {
             centerX, centerY, 0,
             0, 1, 0);
 
-	glColor3f(1, 1, 1);
+	glColor4f(1, 1, 1, 1);
   glEnable(GL_TEXTURE_2D);
 
     createSun(109, sunTexture);
@@ -148,6 +168,7 @@ void draw () {
     createPlanet(9.46, saturnTexture, anguloSaturno, 958);
     createPlanet(4.06, uranusTexture, anguloUrano, 1914);
     createPlanet(3.88, neptuneTexture, anguloNetuno, 3020);
+    createSaturnRings(958, anguloSaturno);
 
   glDisable(GL_TEXTURE_2D);
   glutSwapBuffers();
