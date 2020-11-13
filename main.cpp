@@ -136,7 +136,7 @@ void createSaturnRings (int distanceFromSun, double angulo) {
     glBindTexture(GL_TEXTURE_2D, saturnRingsTexture);
     glTranslatef(distanceFromSun*cos(-angulo), 0, distanceFromSun*sin(-angulo));
     glRotatef(rotation*10, 0, 1, 0);
-    // glRotatef(-90, 1, 0, 0);
+    glRotatef(-60, 1, 0, 0);
     GLUquadric *disk;
     disk = gluNewQuadric();
     gluQuadricTexture(disk, GL_TRUE);
