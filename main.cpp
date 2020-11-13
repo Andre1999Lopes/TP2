@@ -9,7 +9,8 @@
 static float largura, altura;
 static float xMouse = 250, yMouse = 250;
 static float rotation = 0;
-static double eyeX, eyeY, eyeZ = 300, centerX = 0, centerY = 0;
+static float eyeX, eyeY, eyeZ = 150, centerX = 0, centerY = 0;
+const float translationSpeed = 30;
 int sunTexture;
 int mercuryTexture;
 int venusTexture;
@@ -31,7 +32,7 @@ void resize (int w, int h) {
   glViewport (0, 0, w, h);
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
-  gluPerspective(45, (float)w/(float)h, 0.1, 99999999999);
+  gluPerspective(45, (float)w/(float)h, 0.1, 2147483647);
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
 }
@@ -112,11 +113,11 @@ void createPlanet (float radius, int textura, double angulo, float distanceFromS
   glPushMatrix();
     distanceFromSun *= 10;
     glBindTexture(GL_TEXTURE_2D, textura);
+    // glTranslatef(0, distanceFromSun, 0);
+    glTranslatef(distanceFromSun*cos(-angulo), 0, distanceFromSun*sin(-angulo));
     glRotatef(rotation, 0, 1, 0);
     glRotatef(-90, 1, 0, 0);
-    // glTranslatef(distanceFromSun*cos(angulo), 0, distanceFromSun*sin(angulo));
-    glTranslatef(0, 0, -distanceFromSun);
-    createSphere(radius, 200, 200);
+    createSphere(20*radius, 200, 200);
   glPopMatrix();
 
   // 360.0*diaAtual / 365.0
@@ -138,10 +139,10 @@ void draw () {
     createPlanet(0.949, venusTexture, anguloVenus, 72);
     createPlanet(1, earthTexture, anguloTerra, 100);
     createPlanet(0.563, marsTexture, anguloMarte, 152);
-    createPlanet(11.2, jupiterTexture, anguloMarte, 520);
-    createPlanet(9.46, saturnTexture, anguloMarte, 958);
-    createPlanet(4.06, uranusTexture, anguloMarte, 1914);
-    createPlanet(3.88, neptuneTexture, anguloMarte, 3020);
+    createPlanet(11.2, jupiterTexture, anguloJupiter, 520);
+    createPlanet(9.46, saturnTexture, anguloSaturno, 958);
+    createPlanet(4.06, uranusTexture, anguloUrano, 1914);
+    createPlanet(3.88, neptuneTexture, anguloNetuno, 3020);
 
   glDisable(GL_TEXTURE_2D);
   glutSwapBuffers();
@@ -206,14 +207,14 @@ void rodinha (int button, int dir, int x, int y) {
 
 void rotacionaEsfera () {
   rotation += .5f;
-  anguloMercurio += 4.419;
-  anguloVenus += 1.624;
-  anguloTerra += 1;
-  anguloMarte += 0.532;
-  anguloJupiter += 0.084;
-  anguloSaturno += 0.034;
-  anguloUrano += 0.012;
-  anguloNetuno += 0.06;
+  anguloMercurio += 4.419/translationSpeed;
+  anguloVenus += 1.624/translationSpeed;
+  anguloTerra += 1/translationSpeed;
+  anguloMarte += 0.532/translationSpeed;
+  anguloJupiter += 0.084/translationSpeed;
+  anguloSaturno += 0.034/translationSpeed;
+  anguloUrano += 0.012/translationSpeed;
+  anguloNetuno += 0.06/translationSpeed;
 
   glutPostRedisplay();
 }
