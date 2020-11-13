@@ -10,7 +10,7 @@ static float largura, altura;
 static float xMouse = 250, yMouse = 250;
 static float rotation = 0;
 static float eyeX, eyeY, eyeZ = 150, centerX = 0, centerY = 0;
-const float translationSpeed = 30;
+const float translationSpeed = 100;
 int sunTexture;
 int mercuryTexture;
 int venusTexture;
@@ -20,6 +20,7 @@ int jupiterTexture;
 int saturnTexture;
 int uranusTexture;
 int neptuneTexture;
+static bool biggerPlanets = false;
 
 const double pi = 3.14159265;
 static double anguloMercurio = 0, anguloVenus = 0, anguloTerra = 0, anguloMarte = 0, anguloJupiter = 0;
@@ -117,7 +118,11 @@ void createPlanet (float radius, int textura, double angulo, float distanceFromS
     glTranslatef(distanceFromSun*cos(-angulo), 0, distanceFromSun*sin(-angulo));
     glRotatef(rotation, 0, 1, 0);
     glRotatef(-90, 1, 0, 0);
-    createSphere(20*radius, 200, 200);
+    if(biggerPlanets)
+      createSphere(20*radius, 200, 200);
+    else
+      createSphere(radius, 200, 200);
+
   glPopMatrix();
 
   // 360.0*diaAtual / 365.0
@@ -153,6 +158,13 @@ void keyInput (unsigned char key, int x, int y) {
     case 27:
 			exit(0);
 			break;
+
+    case 'b':
+    case 'B':
+      if(biggerPlanets)
+        biggerPlanets = false;
+      else
+        biggerPlanets = true;
 
     // em teoria, era pra virar a camera ao redor do undo
 
@@ -206,7 +218,7 @@ void rodinha (int button, int dir, int x, int y) {
 }
 
 void rotacionaEsfera () {
-  rotation += .5f;
+  rotation += .1f;
   anguloMercurio += 4.419/translationSpeed;
   anguloVenus += 1.624/translationSpeed;
   anguloTerra += 1/translationSpeed;
