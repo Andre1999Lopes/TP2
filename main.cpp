@@ -10,7 +10,7 @@ static float largura, altura;
 static float xMouse = 250, yMouse = 250;
 static float rotation = 0;
 static float eyeX, eyeY, eyeZ = 150, centerX = 0, centerY = 0;
-const float translationSpeed = 10;
+static float translationSpeed = 100;
 int sunTexture;
 int mercuryTexture;
 int venusTexture;
@@ -186,7 +186,17 @@ void keyInput (unsigned char key, int x, int y) {
         biggerPlanets = false;
       else
         biggerPlanets = true;
+      break;
 
+      case 43:
+        if(translationSpeed > 10)
+          translationSpeed -= 15;
+        break;
+      case 45:
+        translationSpeed += 15;
+        break;
+        //não existe polígono com menos de 3 lados
+        
     // em teoria, era pra virar a camera ao redor do undo
 
     // case 'd':
