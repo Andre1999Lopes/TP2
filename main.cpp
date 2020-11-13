@@ -113,9 +113,11 @@ void createPlanet (float radius, int textura, double angulo, float distanceFromS
   glPushMatrix();
     // glTranslated(radius*cos(angulo),0,radius*sin(angulo));
     glBindTexture(GL_TEXTURE_2D, textura);
+    // glTranslatef(0, distanceFromSun, 0);
+    glTranslatef(distanceFromSun*cos(-angulo), 0, distanceFromSun*sin(-angulo));
     glRotatef(rotation, 0, 1, 0);
     glRotatef(-90, 1, 0, 0);
-    glTranslatef(distanceFromSun*cos(angulo), 0, distanceFromSun*sin(angulo));
+
     createSphere(radius, 200, 200);
   glPopMatrix();
 
@@ -134,14 +136,14 @@ void draw () {
 
     createSun(50, sunTexture);
 
-    createPlanet(1.5, mercuryTexture, anguloMercurio, 100);
-    createPlanet(1, venusTexture, anguloVenus, 150);
-    createPlanet(4, earthTexture, anguloTerra, 200);
-    createPlanet(1.5, marsTexture, anguloMarte, 250);
-    createPlanet(10, jupiterTexture, anguloJupiter, 350);
-    createPlanet(8, saturnTexture, anguloSaturno, 450);
-    createPlanet(5, uranusTexture, anguloUrano, 600);
-    createPlanet(5.5, neptuneTexture, anguloNetuno, 750);
+    createPlanet(3, mercuryTexture, anguloMercurio, 100);
+    createPlanet(4, venusTexture, anguloVenus, 150);
+    createPlanet(8, earthTexture, anguloTerra, 200);
+    createPlanet(6, marsTexture, anguloMarte, 250);
+    createPlanet(15, jupiterTexture, anguloJupiter, 350);
+    createPlanet(12, saturnTexture, anguloSaturno, 450);
+    createPlanet(10, uranusTexture, anguloUrano, 600);
+    createPlanet(11, neptuneTexture, anguloNetuno, 750);
 
   glDisable(GL_TEXTURE_2D);
   glutSwapBuffers();
@@ -170,37 +172,37 @@ void keyInput (unsigned char key, int x, int y) {
 void specialKeyInput (int key, int x, int y) {
   switch (key) {
     case GLUT_KEY_UP:
-      eyeY += 1;
-      centerY += 0.5;
+      eyeY += 50;
+      centerY += 50;
       break;
 
     case GLUT_KEY_DOWN:
-      eyeY -= 1;
-      centerY -= 0.5;
+      eyeY -= 50;
+      centerY -= 50;
       break;
     
     case GLUT_KEY_LEFT:
-      eyeX -= 1;
-      centerX -= 1;
+      eyeX -= 50;
+      centerX -= 50;
       break;
 
     case GLUT_KEY_RIGHT:
-      eyeX += 1;
-      centerX += 1;
+      eyeX += 50;
+      centerX += 50;
       break;
   }
 }
 
 void rodinha (int button, int dir, int x, int y) {
   if (button == 3) {
-    eyeZ -= 1;
+    eyeZ -= 50;
     if (eyeZ <= 0) {
       eyeZ = 0.000000001;
     }
   }
 
   else if (button == 4) {
-    eyeZ += 1;
+    eyeZ += 50;
   }
 }
 
