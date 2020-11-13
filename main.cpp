@@ -110,7 +110,7 @@ void createSun (float radius, float textura) {
 
 void createPlanet (float radius, int textura, double angulo, float distanceFromSun) {
   glPushMatrix();
-    distanceFromSun *= 150;
+    distanceFromSun *= 10;
     glBindTexture(GL_TEXTURE_2D, textura);
     glRotatef(rotation, 0, 1, 0);
     glRotatef(-90, 1, 0, 0);
@@ -205,16 +205,16 @@ void rodinha (int button, int dir, int x, int y) {
 }
 
 void rotacionaEsfera () {
-  // rotation += .5f;
-  // anguloMercurio += 0.03;
-  // anguloVenus += 0.05;
-  // anguloMarte += 0.1;
-  // anguloTerra += 0.01;
-  // std::cout << "centerX: " << centerX << std::endl;
-  // std::cout << "centerY: " << centerY << std::endl;
-  // std::cout << "eyeX: " << eyeX << std::endl;
-  // std::cout << "eyeY: " << eyeX << std::endl;
-  // std::cout << "eyeZ: " << eyeZ << std::endl;
+  rotation += .5f;
+  anguloMercurio += 4.419;
+  anguloVenus += 1.624;
+  anguloTerra += 1;
+  anguloMarte += 0.532;
+  anguloJupiter += 0.084;
+  anguloSaturno += 0.034;
+  anguloUrano += 0.012;
+  anguloNetuno += 0.06;
+
   glutPostRedisplay();
 }
 
