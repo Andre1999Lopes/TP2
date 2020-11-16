@@ -9,7 +9,7 @@
 static float largura, altura;
 static float xMouse = 250, yMouse = 250;
 static float rotation = 0;
-static float eyeX, eyeY, eyeZ = 150, centerX = 0, centerY = 0;
+static float eyeX, eyeY, eyeZ = 500, centerX = 0, centerY = 0;
 static float translationSpeed = 100;
 int sunTexture;
 int mercuryTexture;
