@@ -11,8 +11,9 @@
 static float largura, altura;
 static float xMouse = 250, yMouse = 250;
 static float rotation = 0;
-static float eyeX, eyeY, eyeZ = 500, centerX = 0, centerY = 0;
+static float eyeX, eyeY, eyeZ = 1500, centerX = 0, centerY = 0;
 static float translationSpeed = 100;
+static float rotationSpeed = 2;
 int sunTexture;
 int mercuryTexture;
 int venusTexture;
@@ -28,6 +29,10 @@ static bool orbits = false;
 Mix_Music *music;
 
 const double pi = 3.14159265;
+
+static double rotationMercurio = 0, rotationVenus = 0, rotationTerra = 0, rotationMarte = 0, rotationJupiter = 0;
+static double rotationSaturno = 0, rotationUrano = 0, rotationNetuno = 0;
+
 static double anguloMercurio = 0, anguloVenus = 0, anguloTerra = 0, anguloMarte = 0, anguloJupiter = 0;
 static double anguloSaturno = 0, anguloUrano = 0, anguloNetuno = 0;
 
@@ -133,7 +138,7 @@ void drawOrbit (float distanceFromSun, double angulo) {
   glEnd();
 }
 
-void createPlanet (float radius, int textura, double angulo, float distanceFromSun) {
+void createPlanet (float radius, int textura, double angulo, double rotation, float distanceFromSun) {
   glPushMatrix();
     distanceFromSun *= 10;
     glBindTexture(GL_TEXTURE_2D, textura);
@@ -142,30 +147,26 @@ void createPlanet (float radius, int textura, double angulo, float distanceFromS
     glTranslatef(distanceFromSun*cos(-angulo), 0, distanceFromSun*sin(-angulo));
     glRotatef(rotation, 0, 1, 0);
     glRotatef(-90, 1, 0, 0);
-    if(biggerPlanets)
+    if (biggerPlanets)
       createSphere(20*radius, 200, 200);
     else
       createSphere(radius, 200, 200);
-
   glPopMatrix();
 }
 
 void createSaturnRings (int distanceFromSun, double angulo) {
   glPushMatrix();
     distanceFromSun *= 10;
-    glBindTexture(GL_TEXTURE_2D, saturnRingsTexture);
     glTranslatef(distanceFromSun*cos(-angulo), 0, distanceFromSun*sin(-angulo));
-    glRotatef(rotation*10, 0, 1, 0);
-    glRotatef(-60, 1, 0, 0);
+    glRotatef(-75, 1, 0, 0);
+    glColor4f(0.52, 0.46, 0.39, 1);
     GLUquadric *disk;
     disk = gluNewQuadric();
-    gluQuadricTexture(disk, GL_TRUE);
     if(biggerPlanets)
       gluDisk(disk, 20*12, 20*20, 600, 600);
     else
       gluDisk(disk, 12, 20, 600, 600);
   glPopMatrix();
-
 }
 
 void draw () {
@@ -175,22 +176,21 @@ void draw () {
             centerX, centerY, 0,
             0, 1, 0);
 
-	glColor4f(1, 1, 1, 1);
+	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
   glEnable(GL_TEXTURE_2D);
 
     createSun(109, sunTexture);
 
-    createPlanet(0.376, mercuryTexture, anguloMercurio, 38);
-    createPlanet(0.949, venusTexture, anguloVenus, 72);
-    createPlanet(1, earthTexture, anguloTerra, 100);
-    createPlanet(0.563, marsTexture, anguloMarte, 152);
-    createPlanet(11.2, jupiterTexture, anguloJupiter, 520);
-    createPlanet(9.46, saturnTexture, anguloSaturno, 958);
-    createPlanet(4.06, uranusTexture, anguloUrano, 1914);
-    createPlanet(3.88, neptuneTexture, anguloNetuno, 3020);
-    createSaturnRings(958, anguloSaturno);
-
+    createPlanet(0.376, mercuryTexture, anguloMercurio, rotationMercurio, 38);
+    createPlanet(0.949, venusTexture, anguloVenus, rotationVenus, 72);
+    createPlanet(1, earthTexture, anguloTerra, rotationTerra, 100);
+    createPlanet(0.563, marsTexture, anguloMarte, rotationMarte, 152);
+    createPlanet(11.2, jupiterTexture, anguloJupiter, rotationJupiter, 520);
+    createPlanet(9.46, saturnTexture, anguloSaturno, rotationSaturno, 958);
+    createPlanet(4.06, uranusTexture, anguloUrano, rotationUrano, 1914);
+    createPlanet(3.88, neptuneTexture, anguloNetuno, rotationNetuno, 3020);
   glDisable(GL_TEXTURE_2D);
+  createSaturnRings(958, anguloSaturno);
   glutSwapBuffers();
 }
 
@@ -242,37 +242,37 @@ void keyInput (unsigned char key, int x, int y) {
 void specialKeyInput (int key, int x, int y) {
   switch (key) {
     case GLUT_KEY_UP:
-      eyeY += 100;
-      centerY += 100;
+      eyeY += 50;
+      centerY += 50;
       break;
 
     case GLUT_KEY_DOWN:
-      eyeY -= 100;
-      centerY -= 100;
+      eyeY -= 50;
+      centerY -= 50;
       break;
     
     case GLUT_KEY_LEFT:
-      eyeX -= 100;
-      centerX -= 100;
+      eyeX -= 50;
+      centerX -= 50;
       break;
 
     case GLUT_KEY_RIGHT:
-      eyeX += 100;
-      centerX += 100;
+      eyeX += 50;
+      centerX += 50;
       break;
   }
 }
 
 void rodinha (int button, int dir, int x, int y) {
   if (button == 3) {
-    eyeZ -= 500;
+    eyeZ -= 30;
     if (eyeZ <= 0) {
       eyeZ = 0.000000001;
     }
   }
 
   else if (button == 4) {
-    eyeZ += 500;
+    eyeZ += 30;
   }
 }
 
@@ -286,6 +286,15 @@ void rotacionaEsfera () {
   anguloSaturno += 0.034/translationSpeed;
   anguloUrano += 0.012/translationSpeed;
   anguloNetuno += 0.006/translationSpeed;
+
+  rotationMercurio += 0.01706/rotationSpeed;
+  rotationVenus += 0.00411/rotationSpeed;
+  rotationTerra += 1/rotationSpeed;
+  rotationMarte += 0.97087/rotationSpeed;
+  rotationJupiter += 2.43902/rotationSpeed;
+  rotationSaturno += 2.22222/rotationSpeed;
+  rotationUrano += 1.38888/rotationSpeed;
+  rotationNetuno += 1.49253/rotationSpeed;
 
   glutPostRedisplay();
 }
