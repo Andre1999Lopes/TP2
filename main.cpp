@@ -24,6 +24,7 @@ int uranusTexture;
 int neptuneTexture;
 int saturnRingsTexture;
 static bool biggerPlanets = false;
+static bool orbits = false;
 Mix_Music *music;
 
 const double pi = 3.14159265;
@@ -121,10 +122,23 @@ void createSun (float radius, float textura) {
   glPopMatrix();
 }
 
+void drawOrbit (float distanceFromSun, double angulo) {
+  double numSides = 500;
+  glBegin(GL_LINE_LOOP);
+  glLineWidth(30.0f);
+    for (int i=0; i<=numSides; i++) {
+			double t=2*pi*i/numSides;
+      glVertex3d(distanceFromSun*cos(t), 0 ,distanceFromSun*sin(t));
+    }
+  glEnd();
+}
+
 void createPlanet (float radius, int textura, double angulo, float distanceFromSun) {
   glPushMatrix();
     distanceFromSun *= 10;
     glBindTexture(GL_TEXTURE_2D, textura);
+    if (orbits)
+      drawOrbit(distanceFromSun, angulo);
     glTranslatef(distanceFromSun*cos(-angulo), 0, distanceFromSun*sin(-angulo));
     glRotatef(rotation, 0, 1, 0);
     glRotatef(-90, 1, 0, 0);
@@ -192,6 +206,14 @@ void keyInput (unsigned char key, int x, int y) {
         biggerPlanets = false;
       else
         biggerPlanets = true;
+      break;
+
+    case 'o':
+    case 'O':
+      if (orbits)
+        orbits = false;
+      else
+        orbits = true;
       break;
 
       case 43:
