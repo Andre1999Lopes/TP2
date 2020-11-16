@@ -116,7 +116,6 @@ void createPlanet (float radius, int textura, double angulo, float distanceFromS
   glPushMatrix();
     distanceFromSun *= 10;
     glBindTexture(GL_TEXTURE_2D, textura);
-    // glTranslatef(0, distanceFromSun, 0);
     glTranslatef(distanceFromSun*cos(-angulo), 0, distanceFromSun*sin(-angulo));
     glRotatef(rotation, 0, 1, 0);
     glRotatef(-90, 1, 0, 0);
@@ -126,8 +125,6 @@ void createPlanet (float radius, int textura, double angulo, float distanceFromS
       createSphere(radius, 200, 200);
 
   glPopMatrix();
-
-  // 360.0*diaAtual / 365.0
 }
 
 void createSaturnRings (int distanceFromSun, double angulo) {
@@ -257,7 +254,7 @@ void rotacionaEsfera () {
   anguloJupiter += 0.084/translationSpeed;
   anguloSaturno += 0.034/translationSpeed;
   anguloUrano += 0.012/translationSpeed;
-  anguloNetuno += 0.06/translationSpeed;
+  anguloNetuno += 0.006/translationSpeed;
 
   glutPostRedisplay();
 }
