@@ -1,5 +1,5 @@
 all:
-	g++ main.cpp -o jogo -lGLEW -lglut -lGL -lSOIL -lGLU
+	g++ main.cpp -o jogo -lGLEW -lglut -lGL -lSOIL -lGLU -lSDL -lSDL_mixer
 
 install-libraries:
 	sudo apt-get update

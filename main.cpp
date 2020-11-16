@@ -1,8 +1,8 @@
 #include <SOIL/SOIL.h>
 #include <GL/glew.h>
-#include <GL/freeglut.h>
 #include <SDL/SDL.h>
 #include <SDL/SDL_mixer.h>
+#include <GL/freeglut.h>
 
 #include <iostream>
 #include <fstream>
@@ -24,6 +24,7 @@ int uranusTexture;
 int neptuneTexture;
 int saturnRingsTexture;
 static bool biggerPlanets = false;
+Mix_Music *music;
 
 const double pi = 3.14159265;
 static double anguloMercurio = 0, anguloVenus = 0, anguloTerra = 0, anguloMarte = 0, anguloJupiter = 0;
@@ -67,6 +68,9 @@ void setup () {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
+  Mix_OpenAudio(44100,MIX_DEFAULT_FORMAT,2,4096);
+	music=Mix_LoadMUS("songs/universe.mp3");
+
   sunTexture = carregaTextura("imgs/solzin.jpg");
   mercuryTexture = carregaTextura("imgs/mercurio.png");
   venusTexture = carregaTextura("imgs/2k_venus_surface.jpg");
@@ -77,6 +81,9 @@ void setup () {
   uranusTexture = carregaTextura("imgs/2k_uranus.jpg");
   neptuneTexture = carregaTextura("imgs/2k_neptune.jpg");
   saturnRingsTexture = carregaTextura("imgs/2k_saturn_ring.png");
+
+  Mix_PlayMusic(music,-1);
+	Mix_VolumeMusic(32);
 
   // glEnable(GL_CULL_FACE);
   // glCullFace(GL_BACK);
@@ -266,9 +273,9 @@ int main (int argc, char *argv[]) {
   SDL_Init(SDL_INIT_AUDIO);
 	Mix_Init(MIX_INIT_MP3);
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
-  glutInitWindowSize(500, 500);
-  glutInitWindowPosition (100, 100);
-  glutCreateWindow("Luz e Materiais");
+  glutInitWindowSize(1920, 1080);
+  glutInitWindowPosition(0, 0);
+  glutCreateWindow("Universe Sandbox³");
   setup();
   glutDisplayFunc(draw);
   glutReshapeFunc(resize);
