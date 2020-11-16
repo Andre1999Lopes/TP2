@@ -154,18 +154,18 @@ void createPlanet (float radius, int textura, double angulo, double rotation, fl
   glPopMatrix();
 }
 
-void createSaturnRings (int distanceFromSun, double angulo) {
+void createRings (int distanceFromSun, double angulo, float red, float green, float blue, float inner, float outer, int anguloAnel) {
   glPushMatrix();
     distanceFromSun *= 10;
     glTranslatef(distanceFromSun*cos(-angulo), 0, distanceFromSun*sin(-angulo));
-    glRotatef(-75, 1, 0, 0);
-    glColor4f(0.52, 0.46, 0.39, 1);
+    glRotatef(-anguloAnel, 1, 0, 0);
+    glColor3f(red, green, blue);
     GLUquadric *disk;
     disk = gluNewQuadric();
     if(biggerPlanets)
-      gluDisk(disk, 20*12, 20*20, 600, 600);
+      gluDisk(disk, 20*inner, 20*outer, 600, 600);
     else
-      gluDisk(disk, 12, 20, 600, 600);
+      gluDisk(disk, inner, outer, 600, 600);
   glPopMatrix();
 }
 
@@ -189,8 +189,22 @@ void draw () {
     createPlanet(9.46, saturnTexture, anguloSaturno, rotationSaturno, 958);
     createPlanet(4.06, uranusTexture, anguloUrano, rotationUrano, 1914);
     createPlanet(3.88, neptuneTexture, anguloNetuno, rotationNetuno, 3020);
+    
   glDisable(GL_TEXTURE_2D);
-  createSaturnRings(958, anguloSaturno);
+
+  createRings(520, anguloJupiter, 0.32, 0.26, 0.20, 17.5, 18, 90);
+
+  createRings(958, anguloSaturno, 0.52, 0.46, 0.39, 12, 15.5, 75);
+  createRings(958, anguloSaturno, 0.52, 0.46, 0.39, 16, 20, 75);
+
+  createRings(1914, anguloUrano, 0.63, 0.63, 0.63, 9.5, 9.8, 0);
+  createRings(1914, anguloUrano, 0.63, 0.63, 0.63, 8.7, 8.9, 0);
+  createRings(1914, anguloUrano, 0.63, 0.63, 0.63, 8, 8.2, 0);
+
+  createRings(3020, anguloNetuno, 0.24, 0.24, 0.24, 8.1, 8.3, 20);
+  createRings(3020, anguloNetuno, 0.24, 0.24, 0.24, 7.4, 7.8, 20);
+  createRings(3020, anguloNetuno, 0.24, 0.24, 0.24, 5.5, 6.3, 20);
+
   glutSwapBuffers();
 }
 
