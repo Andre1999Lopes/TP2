@@ -1,6 +1,8 @@
 #include <SOIL/SOIL.h>
 #include <GL/glew.h>
 #include <GL/freeglut.h>
+#include <SDL/SDL.h>
+#include <SDL/SDL_mixer.h>
 
 #include <iostream>
 #include <fstream>
@@ -261,6 +263,8 @@ void rotacionaEsfera () {
 
 int main (int argc, char *argv[]) {
   glutInit(&argc, argv);
+  SDL_Init(SDL_INIT_AUDIO);
+	Mix_Init(MIX_INIT_MP3);
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
   glutInitWindowSize(500, 500);
   glutInitWindowPosition (100, 100);
