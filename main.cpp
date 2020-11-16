@@ -215,7 +215,7 @@ void rotacionaEsfera () {
   anguloJupiter += 0.084/translationSpeed;
   anguloSaturno += 0.034/translationSpeed;
   anguloUrano += 0.012/translationSpeed;
-  anguloNetuno += 0.06/translationSpeed;
+  anguloNetuno += 0.006/translationSpeed;
 
   glutPostRedisplay();
 }
