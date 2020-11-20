@@ -14,6 +14,9 @@ static float rotation = 0;
 static float eyeX, eyeY, eyeZ = 1500, centerX = 0, centerY = 0;
 static float translationSpeed = 100;
 static float rotationSpeed = 2;
+
+float matShine[] = { 50 }; 
+
 int sunTexture;
 int mercuryTexture;
 int venusTexture;
@@ -27,13 +30,14 @@ int saturnRingsTexture;
 static bool biggerPlanets = false;
 static bool orbits = false;
 Mix_Music *music;
+static bool light = false;
 
 const double pi = 3.14159265;
 
 static double rotationMercurio = 0, rotationVenus = 0, rotationTerra = 0, rotationMarte = 0, rotationJupiter = 0;
 static double rotationSaturno = 0, rotationUrano = 0, rotationNetuno = 0;
 
-static double anguloMercurio = 0, anguloVenus = 0, anguloTerra = 0, anguloMarte = 0, anguloJupiter = 0;
+static double anguloMercurio = 0, anguloVenus = 0, anguloTerra = 0, anguloMarte = 0, JupiterAngle = 0;
 static double anguloSaturno = 0, anguloUrano = 0, anguloNetuno = 0;
 
 void resize (int w, int h) {
@@ -71,6 +75,13 @@ void posicionaCamera (int x, int y) {
 void setup () {
   glClearColor(0, 0, 0, 1);
 
+  float matAmbAndDif[] = {1.0, 1.0, 1.0, 1.0};    // cor ambiente e difusa: branca
+  float matSpec[] = { 1.0, 1.0, 1,0, 1.0 };
+
+  glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, matAmbAndDif);
+  glMaterialfv(GL_FRONT, GL_SPECULAR, matSpec);
+  glMaterialfv(GL_FRONT, GL_SHININESS, matShine);
+
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
@@ -78,6 +89,9 @@ void setup () {
 	music=Mix_LoadMUS("songs/universe.mp3");
 
   sunTexture = carregaTextura("imgs/solzin.jpg");
+
+  glDisable(GL_LIGHTING);
+
   mercuryTexture = carregaTextura("imgs/mercurio.png");
   venusTexture = carregaTextura("imgs/2k_venus_surface.jpg");
   earthTexture = carregaTextura("imgs/earth.png");
@@ -95,9 +109,8 @@ void setup () {
   // glCullFace(GL_BACK);
   glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
-}
-
-void planetTranslation () {
+	glEnable(GL_LIGHTING);  
+	glEnable(GL_LIGHT0);
 
 }
 
@@ -163,15 +176,39 @@ void createRings (int distanceFromSun, double angulo, float red, float green, fl
     GLUquadric *disk;
     disk = gluNewQuadric();
     if(biggerPlanets)
-      gluDisk(disk, 20*inner, 20*outer, 600, 600);
+      gluDisk(disk, 20*inner, 20*outer, 50, 50);
     else
-      gluDisk(disk, inner, outer, 600, 600);
+      gluDisk(disk, inner, outer, 50, 50);
   glPopMatrix();
 }
 
 void draw () {
+  GLfloat luzAmbiente[4] = {0.0,0.0,0.0,1.0}; 
+	GLfloat luzDifusa[4] = {1.0,1.0,1.0,1.0};
+	GLfloat luzEspecular[4] = {1.0, 1.0, 1.0, 1.0};
+	GLfloat posicaoLuz[4] = {0.0, 0.0, 0.0, 1.0};
+  GLfloat luzAmbienteGlobal[] = {0.4, 0.4, 0.4, 1.0};
+
+  GLfloat especularidade[4]={1.0,1.0,1.0,1.0}; 
+	GLint especMaterial = 60;
+
+  glMaterialfv(GL_FRONT,GL_SPECULAR, especularidade);
+	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, luzAmbiente);
+
+  glLightfv(GL_LIGHT0, GL_AMBIENT, luzAmbiente); 
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, luzDifusa );
+	glLightfv(GL_LIGHT0, GL_SPECULAR, luzEspecular );
+	glLightfv(GL_LIGHT0, GL_POSITION, posicaoLuz );
+
+  glLightModelfv(GL_LIGHT_MODEL_AMBIENT, luzAmbienteGlobal);
+  glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, false);
+
+  if (light) glEnable(GL_LIGHT0);
+  else glDisable(GL_LIGHT0);
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glLoadIdentity();
+
   gluLookAt(eyeX, eyeY, eyeZ,
             centerX, centerY, 0,
             0, 1, 0);
@@ -179,20 +216,25 @@ void draw () {
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
   glEnable(GL_TEXTURE_2D);
 
+    glDisable(GL_LIGHTING);
     createSun(109, sunTexture);
+
+    if (light) glEnable(GL_LIGHTING);
+
+	  glMaterialfv(GL_FRONT,GL_SHININESS, matShine);
 
     createPlanet(0.376, mercuryTexture, anguloMercurio, rotationMercurio, 38);
     createPlanet(0.949, venusTexture, anguloVenus, rotationVenus, 72);
     createPlanet(1, earthTexture, anguloTerra, rotationTerra, 100);
     createPlanet(0.563, marsTexture, anguloMarte, rotationMarte, 152);
-    createPlanet(11.2, jupiterTexture, anguloJupiter, rotationJupiter, 520);
+    createPlanet(11.2, jupiterTexture, JupiterAngle, rotationJupiter, 520);
     createPlanet(9.46, saturnTexture, anguloSaturno, rotationSaturno, 958);
     createPlanet(4.06, uranusTexture, anguloUrano, rotationUrano, 1914);
     createPlanet(3.88, neptuneTexture, anguloNetuno, rotationNetuno, 3020);
     
   glDisable(GL_TEXTURE_2D);
 
-  createRings(520, anguloJupiter, 0.32, 0.26, 0.20, 17.5, 18, 90);
+  createRings(520, JupiterAngle, 0.32, 0.26, 0.20, 17.5, 18, 90);
 
   createRings(958, anguloSaturno, 0.52, 0.46, 0.39, 12, 15.5, 75);
   createRings(958, anguloSaturno, 0.52, 0.46, 0.39, 16, 20, 75);
@@ -204,6 +246,8 @@ void draw () {
   createRings(3020, anguloNetuno, 0.24, 0.24, 0.24, 8.1, 8.3, 20);
   createRings(3020, anguloNetuno, 0.24, 0.24, 0.24, 7.4, 7.8, 20);
   createRings(3020, anguloNetuno, 0.24, 0.24, 0.24, 5.5, 6.3, 20);
+
+  glEnable(GL_LIGHTING);
 
   glutSwapBuffers();
 }
@@ -220,6 +264,12 @@ void keyInput (unsigned char key, int x, int y) {
         biggerPlanets = false;
       else
         biggerPlanets = true;
+      break;
+
+    case 'l':
+    case 'L':
+      if(light) light = false;
+      else light = true;
       break;
 
     case 'o':
@@ -296,7 +346,7 @@ void rotacionaEsfera () {
   anguloVenus += 1.624/translationSpeed;
   anguloTerra += 1/translationSpeed;
   anguloMarte += 0.532/translationSpeed;
-  anguloJupiter += 0.084/translationSpeed;
+  JupiterAngle += 0.084/translationSpeed;
   anguloSaturno += 0.034/translationSpeed;
   anguloUrano += 0.012/translationSpeed;
   anguloNetuno += 0.006/translationSpeed;
