@@ -11,10 +11,11 @@
 static float width, height;
 static float xMouse = 250, yMouse = 250;
 static float rotation = 0;
-static float eyeX, eyeY = 100, eyeZ = 1500, centerX = 0, centerY = 0;
+static float eyeX, eyeY = 100, eyeZ = 400, centerX = 0, centerY = 0, centerZ = 0;
 static float translationSpeed = 100;
 static float rotationSpeed = 2;
 static bool sideLook = true;
+static bool splash = true;
 
 float matShine[] = { 50 }; 
 
@@ -32,6 +33,7 @@ static bool biggerPlanets = false;
 static bool orbits = false;
 Mix_Music *music;
 static bool light = false;
+static bool animation = true;
 
 const double pi = 3.14159265;
 
@@ -211,7 +213,7 @@ void draw () {
   glLoadIdentity();
   
   gluLookAt(eyeX, eyeY, eyeZ,
-            centerX, centerY, 0,
+            centerX, centerY, centerZ,
             0, 1, 0);
 
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
@@ -281,6 +283,7 @@ void keyInput (unsigned char key, int x, int y) {
         eyeZ = 1500;
         sideLook = true;
       }
+      centerX = centerY = centerZ = 0;
       break;
 
     case 'l':
@@ -323,14 +326,28 @@ void keyInput (unsigned char key, int x, int y) {
 void specialKeyInput (int key, int x, int y) {
   switch (key) {
     case GLUT_KEY_UP:
-      eyeY += 50;
-      centerY += 50;
-      break;
+      if(sideLook){
+        eyeY += 50;
+        centerY += 50;
+        break;
+      }
+      else{
+        eyeZ -= 50;
+        centerZ -= 50;
+        break;
+      }
 
     case GLUT_KEY_DOWN:
-      eyeY -= 50;
-      centerY -= 50;
-      break;
+      if(sideLook){
+        eyeY -= 50;
+        centerY -= 50;
+        break;
+      }
+      else{
+        eyeZ += 50;
+        centerZ += 50;
+        break;
+      }
     
     case GLUT_KEY_LEFT:
       eyeX -= 50;
@@ -390,7 +407,22 @@ void rotacionaEsfera () {
   rotationSaturno += 2.22222/rotationSpeed;
   rotationUrano += 1.38888/rotationSpeed;
   rotationNetuno += 1.49253/rotationSpeed;
+}
 
+void atualizaCena(){
+  rotacionaEsfera();
+  if(splash){
+    if(animation && eyeZ < 1500){
+      eyeZ += 20;
+    }
+    else{
+      animation = false;
+      splash = false;
+      orbits = true;
+      light = true;
+    }
+  }
+  
   glutPostRedisplay();
 }
 
@@ -409,6 +441,6 @@ int main (int argc, char *argv[]) {
   glutPassiveMotionFunc(posicionaCamera);
   glutSpecialFunc(specialKeyInput);
   glutMouseFunc(rodinha);
-  glutIdleFunc(rotacionaEsfera);
+  glutIdleFunc(atualizaCena);
   glutMainLoop();
 }
