@@ -17,3 +17,11 @@ Trabalho desenvolvido pelos alunos [Danilo Gonçalves](https://github.com/danilo
 - make -> compila o código do jogo.
 - make run -> inicia o jogo após a sua compilação.
 - make clean -> deleta o arquivo compilado do jogo.
+
+## Comandos dentro da aplicação
+
+- Letra O: alterna a visibilidade das órbitas
+- Letra L: alterna o funcionamento da luz
+- Letra C: altera a posição da câmera (vista lateral ou superior)
+- Setas direcionais: movem-se pelo sistema solar
+- Scroll do mouse: zoom-in e zoom-out
