@@ -8,12 +8,13 @@
 #include <fstream>
 #include <cmath>
 
-static float largura, altura;
+static float width, height;
 static float xMouse = 250, yMouse = 250;
 static float rotation = 0;
-static float eyeX, eyeY, eyeZ = 1500, centerX = 0, centerY = 0;
+static float eyeX, eyeY = 100, eyeZ = 1500, centerX = 0, centerY = 0;
 static float translationSpeed = 100;
 static float rotationSpeed = 2;
+static bool sideLook = true;
 
 float matShine[] = { 50 }; 
 
@@ -41,8 +42,8 @@ static double anguloMercurio = 0, anguloVenus = 0, anguloTerra = 0, anguloMarte 
 static double anguloSaturno = 0, anguloUrano = 0, anguloNetuno = 0;
 
 void resize (int w, int h) {
-  largura = w;
-  altura = h;
+  width = w;
+  height = h;
 
   glViewport (0, 0, w, h);
   glMatrixMode(GL_PROJECTION);
@@ -189,7 +190,7 @@ void draw () {
 	GLfloat posicaoLuz[4] = {0.0, 0.0, 0.0, 1.0};
   GLfloat luzAmbienteGlobal[] = {0.4, 0.4, 0.4, 1.0};
 
-  GLfloat especularidade[4]={1.0,1.0,1.0,1.0}; 
+  GLfloat especularidade[4] = {1.0,1.0,1.0,1.0}; 
 	GLint especMaterial = 60;
 
   glMaterialfv(GL_FRONT,GL_SPECULAR, especularidade);
@@ -208,7 +209,7 @@ void draw () {
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glLoadIdentity();
-
+  
   gluLookAt(eyeX, eyeY, eyeZ,
             centerX, centerY, 0,
             0, 1, 0);
@@ -264,6 +265,22 @@ void keyInput (unsigned char key, int x, int y) {
         biggerPlanets = false;
       else
         biggerPlanets = true;
+      break;
+
+    case 'c':
+    case 'C':
+      if(sideLook){
+        eyeX = 0;
+        eyeY = 1500;
+        eyeZ = 100;
+        sideLook = false;
+      }
+      else{
+        eyeX = 0;
+        eyeY = 100;
+        eyeZ = 1500;
+        sideLook = true;
+      }
       break;
 
     case 'l':
@@ -329,14 +346,28 @@ void specialKeyInput (int key, int x, int y) {
 
 void rodinha (int button, int dir, int x, int y) {
   if (button == 3) {
-    eyeZ -= 30;
-    if (eyeZ <= 0) {
+    if(sideLook){
+      eyeZ -= 30;
+      if (eyeZ <= 0) {
       eyeZ = 0.000000001;
+      }
+    }
+      
+    else{
+      eyeY -= 30;
+      if (eyeY <= 0) {
+      eyeY = 0.000000001;
+      }
     }
   }
 
   else if (button == 4) {
-    eyeZ += 30;
+    if(sideLook){
+      eyeZ += 30;
+    }
+    else{
+      eyeY += 30;
+    }
   }
 }
 
