@@ -19,7 +19,7 @@ int main (int argc, char *argv[]) {
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
   glutInitWindowSize(1920, 1080);
   glutInitWindowPosition(0, 0);
-  glutCreateWindow("Universe Sandbox³");
+  glutCreateWindow("Universe Sandbox 3");
   setup();
   glutDisplayFunc(draw);
   glutReshapeFunc(resize);
