@@ -1,6 +1,6 @@
 # Trabalho Prático 2
 
-Trabalho desenvolvido pelos alunos [Danilo Gonçalves](https://github.com/danilogc4) e [André Júnior](https://github.com/Andre1999Lopes) para a disciplina Computação Gráfica do CEFET-MG.
+Trabalho desenvolvido pelos alunos [Danilo Gonçalves](https://github.com/danilogc4), [André Júnior](https://github.com/Andre1999Lopes) e [Rosane Silva](https://github.com/RosaneSilva) para a disciplina Computação Gráfica do CEFET-MG.
 
 ## Extras implementados
 
