@@ -2,6 +2,8 @@
 
 Trabalho desenvolvido pelos alunos [Danilo Gonçalves](https://github.com/danilogc4), [André Júnior](https://github.com/Andre1999Lopes) e [Rosane Silva](https://github.com/RosaneSilva) para a disciplina Computação Gráfica do CEFET-MG.
 
+#### [Vídeo do trabalho](https://www.youtube.com/watch?v=_OGoa6mJRJI)
+
 ## Extras implementados
 
 - Manter razão de aspecto ao redimensionar a tela (8%);
