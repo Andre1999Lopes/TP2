@@ -25,5 +25,6 @@ Trabalho desenvolvido pelos alunos [Danilo Gonçalves](https://github.com/danilo
 - Letra O: alterna a visibilidade das órbitas
 - Letra L: alterna o funcionamento da luz
 - Letra C: altera a posição da câmera (vista lateral ou superior)
+- Letra B: aumenta o tamanho dos planetas para que seja mais fácil achá-los
 - Setas direcionais: movem-se pelo sistema solar
 - Scroll do mouse: zoom-in e zoom-out
